@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+</head>
+
+<body>
+  <section class="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="title">
+          What our clients say
+        </h2>
+      </div>
+      <div class="testimonials-content">
+        <div class="swiper testimonials-slider js-testimonials-slider">
+          <div class="swiper-wrapper" id="testimonials-container">
+            <!-- <div class="swiper-slide testimonials-item">
+              <div class="info">
+                <img src="" alt="">
+                <div class="text-box">
+                  <h3 class="name">John Doe</h3>
+                  <span class="job">Web developer</span>
+                </div>
+              </div>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse dolorum quos sequi quis deleniti velit
+                cumque aliquam porro libero earum!</p>
+              <div class="rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+            </div>
+            <div class="swiper-slide testimonials-item">
+              <div class="info">
+                <img src="" alt="">
+                <div class="text-box">
+                  <h3 class="name">John Doe</h3>
+                  <span class="job">Web developer</span>
+                </div>
+              </div>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse dolorum quos sequi quis deleniti velit
+                cumque aliquam porro libero earum!</p>
+              <div class="rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+            </div>
+            <div class="swiper-slide testimonials-item">
+              <div class="info">
+                <img src="" alt="">
+                <div class="text-box">
+                  <h3 class="name">John Doe</h3>
+                  <span class="job">Web developer</span>
+                </div>
+              </div>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse dolorum quos sequi quis deleniti velit
+                cumque aliquam porro libero earum!</p>
+              <div class="rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+            </div>
+            <div class="swiper-slide testimonials-item">
+              <div class="info">
+                <img src="" alt="">
+                <div class="text-box">
+                  <h3 class="name">John Doe</h3>
+                  <span class="job">Web developer</span>
+                </div>
+              </div>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse dolorum quos sequi quis deleniti velit
+                cumque aliquam porro libero earum!</p>
+              <div class="rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+            </div>
+            <div class="swiper-slide testimonials-item">
+              <div class="info">
+                <img src="" alt="">
+                <div class="text-box">
+                  <h3 class="name">John Doe</h3>
+                  <span class="job">Web developer</span>
+                </div>
+              </div>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse dolorum quos sequi quis deleniti velit
+                cumque aliquam porro libero earum!</p>
+              <div class="rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+            </div> -->
+          </div>
+        </div>
+        <div class="swiper-pagination js-testimonials-pagination"></div>
+      </div>
+    </div>
+  </section>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <script>
+    const url = 'http://localhost:3000/getReviews';
+
+    // Use the fetch API to get data from the server
+    fetch(url)
+      .then(response => {
+        // Check if the response is ok (status is in the range 200-299)
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        // Parse the JSON from the response
+        return response.json();
+      })
+      .then(data => {
+        // Log the data to the console
+        const reviews = data["result"]["reviews"];
+        function insertReviews(reviews) {
+          const testimonialsContainer = document.getElementById('testimonials-container');
+          testimonialsContainer.innerHTML = ''; // Clear existing content
+
+          reviews.forEach(review => {
+            const reviewHtml = createReviewHtml(review);
+            testimonialsContainer.insertAdjacentHTML('beforeend', reviewHtml);
+          });
+
+          // Initialize Swiper after inserting reviews
+          const swiper = new Swiper('.js-testimonials-slider', {
+            // Optional parameters
+            grabCursor: true,
+            loop: true,
+            autoplay: {
+              delay: 5000,
+            },
+            spaceBetween: 30,
+            pagination: {
+              el: '.js-testimonials-pagination',
+              clickable: true
+            },
+            breakpoints: {
+              767: {
+                slidesPerView: 2
+              }
+            }
+
+          });
+        }
+
+        function createReviewHtml(review) {
+          const stars = Array.from({ length:review.rating}, (_, i) => {
+            return `<i class="fa fa-star ${i < review.rating ? 'filled' : ''}"></i>`;
+          }).join('');
+          return `
+          <div class="swiper-slide testimonials-item">
+              <div class="info">
+                <img src="${review.profile_photo_url}" alt="${review.author_name}">
+                <div class="text-box">
+                  <h3 class="name">${review.author_name}</h3>
+                  <span class="job">   <div class="rating">
+               ${stars}
+              </div></span>
+                </div>
+              </div>
+              <p>${review.text}</p>
+           
+            </div>
+         
+            `;
+        }
+
+        // Insert the reviews
+        insertReviews(reviews);
+      })
+      .catch(error => {
+        // Handle any errors
+        console.error('There has been a problem with your fetch operation:', error);
+      });
+  </script>
+</body>
+
+</html>
